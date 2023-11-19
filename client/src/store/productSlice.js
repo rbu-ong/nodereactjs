@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-if (window.location.href == "https://renzsegerbu-ong.com/") {
+if (window.location.href.includes("https://renzsegerbu-ong.com")) {
   axios.defaults.baseURL = "https://renzsegerbu-ong.com";
 } else {
   axios.defaults.baseURL = "http://localhost:5000";
