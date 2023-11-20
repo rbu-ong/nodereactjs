@@ -31,14 +31,28 @@ export const deleteProduct = createAsyncThunk(
   }
 );
 
+const EDITPRODUCT_INITIAL = {
+  productId: null,
+  productName: "",
+};
+
 const productSlice = createSlice({
   name: "product",
   initialState: {
     loading: null,
     products: [],
     error: null,
+    editingProduct: EDITPRODUCT_INITIAL,
   },
-  //   reducers: {},
+  reducers: {
+    editProduct(state, action) {
+      if (action.payload) {
+        state.editingProduct = action.payload;
+      } else {
+        state.editingProduct = EDITPRODUCT_INITIAL;
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchProduct.pending, (state) => {});
     builder.addCase(fetchProduct.fulfilled, (state, action) => {

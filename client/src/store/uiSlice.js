@@ -6,8 +6,8 @@ const uiSlice = createSlice({
     isFormVisible: false,
   },
   reducers: {
-    toggle(state) {
-      state.isFormVisible = !state.isFormVisible;
+    toggle(state, action) {
+      state.isFormVisible = action.payload;
     },
   },
 });

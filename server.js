@@ -39,8 +39,13 @@ app.get("/api", (req, res) => {
 app.post("/api", (req, res) => {
   const { dataToSave } = req.body;
 
-  const query = "INSERT INTO products (productname) VALUES (?)";
-  connection.query(query, [dataToSave.productName]);
+  if (dataToSave.productId) {
+    const query = "UPDATE products SET productname = ? WHERE id = ?";
+    connection.query(query, [dataToSave.productName, dataToSave.productId]);
+  } else {
+    const query = "INSERT INTO products (productname) VALUES (?)";
+    connection.query(query, [dataToSave.productName]);
+  }
 
   connection.query("SELECT * FROM products", (error, results, fields) => {
     res.json({ products: results });

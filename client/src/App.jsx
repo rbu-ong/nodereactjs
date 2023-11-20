@@ -14,13 +14,15 @@ function App() {
     <>
       {isFormVisible ? <ProductForm /> : ""}
       <Products />
-      <button
-        onClick={() => {
-          dispatch(uiActions.toggle());
-        }}
-      >
-        Add Product
-      </button>
+      {!isFormVisible && (
+        <button
+          onClick={() => {
+            dispatch(uiActions.toggle(true));
+          }}
+        >
+          Add Product
+        </button>
+      )}
     </>
   );
 }

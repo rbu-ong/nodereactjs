@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveProduct } from "../store/productSlice";
 import { uiActions } from "../store/uiSlice";
+import { productActions } from "../store/productSlice";
 
 const INITIAL_FORM_STATE = {
   productName: "",
@@ -9,20 +10,27 @@ const INITIAL_FORM_STATE = {
 
 export default function ProductForm() {
   const dispatch = useDispatch();
+  const products = useSelector((state) => state.product.products);
   const [formData, setFormData] = useState(INITIAL_FORM_STATE);
+  const selectedProduct = useSelector((state) => state.product.editingProduct);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+
+    dispatch(
+      productActions.editProduct({
+        ...selectedProduct,
+        [name]: value,
+      })
+    );
+
+    console.log(selectedProduct);
   };
 
   const formSubmitHandler = (e) => {
     e.preventDefault();
 
-    dispatch(saveProduct(formData));
+    dispatch(saveProduct(selectedProduct));
     dispatch(uiActions.toggle());
     setFormData(INITIAL_FORM_STATE);
   };
@@ -35,10 +43,10 @@ export default function ProductForm() {
       >
         <input
           type="text"
-          className="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 w-96"
+          className="peer border-none bg-transparent placeholder-transparent focus:border-transparent focus:outline-none focus:ring-0 w-full"
           placeholder="Product Name"
           name="productName"
-          value={formData.productName}
+          value={selectedProduct.productName}
           onChange={handleChange}
         />
 
@@ -46,8 +54,17 @@ export default function ProductForm() {
           Product Name
         </span>
       </label>
+      <button
+        className="mr-2"
+        onClick={() => {
+          dispatch(productActions.editProduct(""));
+          dispatch(uiActions.toggle(0));
+        }}
+      >
+        Cancel
+      </button>
       <button className="bg-green-600 mt-2 mb-5" type="submit">
-        Save Product
+        {selectedProduct.productId ? "Update" : "Save"} Product
       </button>
     </form>
   );
